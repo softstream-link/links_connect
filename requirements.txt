@@ -1,0 +1,2 @@
+ouch-connect==5.0.1rc2
+pytest==6.2.4

@@ -1,0 +1,28 @@
+{
+    "terminal.integrated.env.osx": {
+        "PYTHONPATH": ".:${env:PYTHONPATH}"
+    },
+    "python.analysis.typeCheckingMode": "off",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "[python]": {
+        "editor.detectIndentation": false,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "black-formatter.args": [
+        "--line-length",
+        "150"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "cSpell.words": [
+        "clbk",
+        "micromamba"
+    ],
+}
