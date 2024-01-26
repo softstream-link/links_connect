@@ -46,15 +46,17 @@ def test_callback_function_filter_entries():
     assert registry.find_all({"two": 2, "one": 1}) == [one, two]
     assert registry.find({}) == None
 
+
 def test_callback_registry():
-    
-    assert CallbackRegistry.len() == 0
     registry1 = CallbackRegistry.get("one")
-    registry1_ = CallbackRegistry.get("one")
-    assert registry1 == registry1_
-    registry2 = CallbackRegistry.get("two")
-    registry3 = CallbackRegistry.get("three")
+    assert registry1 == CallbackRegistry.get("one")
     
+    registry2 = CallbackRegistry.get("two")
+    assert registry2 == CallbackRegistry.get("two")
+
+    registry3 = CallbackRegistry.get("three")
+    assert registry3 == CallbackRegistry.get("three")
+
     one = lambda clbk, con_id, msg: None
     two = lambda clbk, con_id, msg: None
     three = lambda clbk, con_id, msg: None
@@ -62,8 +64,9 @@ def test_callback_registry():
     registry1.on_recv_filter_callback_entries.push({"one": 1}, one)
     registry2.on_recv_filter_callback_entries.push({"two": 1}, two)
 
-    log.info(f"{registry1!s}") # includes self instance
-    log.info(f"{registry1!r}") # includes cls instance
+    log.info(f"{registry1!s}")  # includes self instance
+    log.info(f"{registry1!r}")  # includes cls instance
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

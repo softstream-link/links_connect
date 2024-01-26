@@ -1,7 +1,5 @@
-from links_connect.callbacks import ConId, Message, Filter
-from links_connect.callbacks.decorator import CallbackRegistry, DecoratorBase, CallbackFunction
-
-
+import links_connect as lc
+from links_connect.callbacks.decorator.registry import CallbackRegistry, DecoratorDriverBase, CallbackFunction
 import logging
 
 
@@ -20,50 +18,52 @@ class Sender:
 
 
 class SettableSender:
-    def __init__(self) -> None:
-        self._sender = Sender()
+    def __init__(self):
+        super().__init__()
+        self.__sender = Sender()
 
     @property
     def sender(self) -> Sender:
-        return self._sender
+        return self.__sender
 
     @sender.setter
     def sender(self, sender: Sender):
-        self._sender = sender
+        self.__sender = sender
 
 
-class DecoratorDriver(DecoratorBase, SettableSender):
-    def __init__(self, sent_level=logging.INFO, recv_level=logging.INFO) -> None:
+class DecoratorDriver(DecoratorDriverBase, SettableSender):
+    def __init__(self) -> None:
         super().__init__()
-        self._sent_level = sent_level
-        self._recv_level = recv_level
 
-    def on_sent(self, con_id: ConId, msg: Message):
+    def on_sent(self, con_id: lc.ConId, msg: lc.Message):
         registry = CallbackRegistry.get(self.__class__.__name__).on_sent_filter_callback_entries
         match registry.find(msg):
             case None:
-                log.debug(f"{self.__class__.__name__}.on_sent: Callback Not Registered {con_id} {type(msg).__name__}({msg})")
+                log.warning(f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})")
             case function:
-                log.log(self._sent_level, f"{self.__class__.__name__}.on_sent: {function} {con_id} {type(msg).__name__}({msg})")
+                log.debug(f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)
+        super().on_sent(con_id, msg)
 
-    def on_recv(self, con_id: ConId, msg: Message):
+    def on_recv(self, con_id: lc.ConId, msg: lc.Message):
         registry = CallbackRegistry.get(self.__class__.__name__).on_recv_filter_callback_entries
         match registry.find(msg):
             case None:
-                log.warning(f"{self.__class__.__name__}.on_recv: Callback Not Registered {con_id} {type(msg).__name__}({msg})")
+                log.warning(f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})")
             case function:
-                log.log(self._recv_level, f"{self.__class__.__name__}.on_recv: {function} {con_id} {type(msg).__name__}({msg})")
+                log.debug(f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)
+        super().on_recv(con_id, msg)
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}{{'sender': {self.sender}}}\n{CallbackRegistry.get(self.__class__.__name__)}"
 
+
 from typing import Callable, Any, Type
 
 
-def on_recv(filter: Filter, scope: str):
-    def decorator(function: Callable[[Any, ConId, Message], None]):
+def on_recv(filter: lc.Filter, scope: str):
+    def decorator(function: Callable[[Any, lc.ConId, lc.Message], None]):
         filter_callback_entries = CallbackRegistry.get(scope).on_recv_filter_callback_entries
         existing_function = filter_callback_entries.get(filter)
         if existing_function is None:
@@ -78,8 +78,8 @@ def on_recv(filter: Filter, scope: str):
     return decorator
 
 
-def on_sent(filter: Filter, scope: str):
-    def decorator(function: Callable[[Any, ConId, Message], None]):
+def on_sent(filter: lc.Filter, scope: str):
+    def decorator(function: Callable[[Any, lc.ConId, lc.Message], None]):
         filter_callback_entries = CallbackRegistry.get(scope).on_sent_filter_callback_entries
         existing_function = filter_callback_entries.get(filter)
         if existing_function is None:

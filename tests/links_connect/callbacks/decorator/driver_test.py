@@ -1,4 +1,4 @@
-from links_connect import ConId, Message, on_recv, on_sent, DecoratorDriver
+from links_connect import ConId, Message, on_recv, on_sent, DecoratorDriver, CallbackRegistry, LoggerCallback
 import logging
 
 log = logging.getLogger(__name__)
@@ -41,11 +41,9 @@ class ExampleCallback2(DecoratorDriver):
         self._one_recv += 1
 
 
-def test_scenario_callback_driver():
-    from links_connect.callbacks.decorator.registry import CallbackRegistry
-
-    clbk1 = ExampleCallback1()
-    clbk2 = ExampleCallback2()
+def test_callback_driver():
+    clbk1 = ExampleCallback1() + LoggerCallback()
+    clbk2 = ExampleCallback2() + LoggerCallback()
 
     log.info(f"clbk: {clbk1}")
     log.info(f"clbk: {clbk2}")
@@ -67,7 +65,7 @@ def test_scenario_callback_driver():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    test_scenario_callback_driver()
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8s] (%(threadName)10s) %(message)s (%(filename)s:%(lineno)s)")
+    test_callback_driver()
     # import pytest
     # pytest.main([__file__])  # fails because ExampleCallback get loaded twice which causes callbacks to be registered twice
