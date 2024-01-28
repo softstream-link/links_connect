@@ -1,4 +1,4 @@
-from links_connect import MemoryStoreCallback, LoggerCallback, ConId, ConType
+from links_connect.callbacks import MemoryStoreCallback, LoggerCallback, ConId, ConType
 import logging
 
 log = logging.getLogger(__name__)

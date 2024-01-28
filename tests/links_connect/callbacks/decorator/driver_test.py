@@ -1,4 +1,4 @@
-from links_connect import ConId, Message, on_recv, on_sent, DecoratorDriver, CallbackRegistry, LoggerCallback
+from links_connect.callbacks import ConId, Message, on_recv, on_sent, DecoratorDriver, CallbackRegistry, LoggerCallback
 import logging
 
 log = logging.getLogger(__name__)

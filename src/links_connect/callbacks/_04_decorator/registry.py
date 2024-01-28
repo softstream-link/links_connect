@@ -1,56 +1,54 @@
-import links_connect as lc
+import links_connect.callbacks as clbks
 import logging
-from typing import Callable, Optional, List
-from collections.abc import Sequence
-from dataclasses import dataclass
-
+import typing
+import dataclasses
 
 log = logging.getLogger(__name__)
 
 
-class DecoratorDriverBase(lc.Chainable):
+class DecoratorDriverBase(clbks.ChainableCallback):
     def __init__(self):
         super().__init__()
 
 
-CallbackFunction = Callable[[DecoratorDriverBase, lc.ConId, lc.Message], None]
+CallbackFunction = typing.Callable[[DecoratorDriverBase, clbks.ConId, clbks.Message], None]
 
 
-@dataclass
-class FilterEntry:
-    filter: lc.Filter
+@dataclasses.dataclass
+class Filter2CallbackEntry:
+    filter: clbks.Filter
     function: CallbackFunction
 
 
-class FilterCallbackEntries:
+class Filter2CallbackEntries:
     def __init__(self):
-        self.__filter_entries: List[FilterEntry] = []
+        self.__filter_entries: typing.List[Filter2CallbackEntry] = []
 
     def len(self) -> int:
         return len(self.__filter_entries)
 
-    def push(self, subset: lc.Filter, function: CallbackFunction):
+    def push(self, subset: clbks.Filter, function: CallbackFunction):
         if log.isEnabledFor(logging.DEBUG):
             log.debug(f"{self.__class__.__name__}.push: filter: {subset}, function: {function}")
-        self.__filter_entries.append(FilterEntry(subset, function))
+        self.__filter_entries.append(Filter2CallbackEntry(subset, function))
 
-    def find_all(self, message: lc.Message) -> List[CallbackFunction]:
-        return [entry.function for entry in self.__filter_entries if lc.is_matching(entry.filter, message)]
+    def find_all(self, message: clbks.Message) -> typing.List[CallbackFunction]:
+        return [entry.function for entry in self.__filter_entries if clbks.is_matching(entry.filter, message)]
 
-    def find(self, message: lc.Message) -> Optional[CallbackFunction]:
+    def find(self, message: clbks.Message) -> typing.Optional[CallbackFunction]:
         for entry in self.__filter_entries:
-            if lc.is_matching(entry.filter, message):
+            if clbks.is_matching(entry.filter, message):
                 return entry.function
         return None
 
-    def get(self, subset: lc.Filter) -> Optional[CallbackFunction]:
+    def get(self, subset: clbks.Filter) -> typing.Optional[CallbackFunction]:
         for entry in self.__filter_entries:
             if entry.filter == subset:
                 return entry.function
         return None
 
     @property
-    def entries(self) -> Sequence[FilterEntry]:
+    def entries(self) -> typing.Iterable[Filter2CallbackEntry]:
         return self.__filter_entries
 
     def __iter__(self):
@@ -84,15 +82,15 @@ class CallbackRegistry:
 
     def __init__(self, name: str) -> None:
         self.__name = name
-        self.__on_recv_filter_callback_entries = FilterCallbackEntries()
-        self.__on_sent_filter_callback_entries = FilterCallbackEntries()
+        self.__on_recv_filter_callback_entries = Filter2CallbackEntries()
+        self.__on_sent_filter_callback_entries = Filter2CallbackEntries()
 
     @property
-    def on_recv_filter_callback_entries(self) -> FilterCallbackEntries:
+    def on_recv_filter_callback_entries(self) -> Filter2CallbackEntries:
         return self.__on_recv_filter_callback_entries
 
     @property
-    def on_sent_filter_callback_entries(self) -> FilterCallbackEntries:
+    def on_sent_filter_callback_entries(self) -> Filter2CallbackEntries:
         return self.__on_sent_filter_callback_entries
 
     def __str__(self) -> str:

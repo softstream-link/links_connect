@@ -1,4 +1,3 @@
-import links_connect as lc
 import pytest
 from unittest.mock import Mock
 from typing import Tuple
@@ -8,11 +7,12 @@ log = logging.getLogger(__name__)
 
 @pytest.fixture
 def mock_chained(mocker) -> Tuple[Mock, Mock]:
-    original_on_recv = lc.Chainable.on_recv
-    original_on_sent = lc.Chainable.on_sent
+    from links_connect.callbacks import ChainableCallback
+    original_on_recv = ChainableCallback.on_recv
+    original_on_sent = ChainableCallback.on_sent
 
-    mock_on_recv =  mocker.patch("links_connect.callbacks.chained.Chainable.on_recv", autospec=True)
-    mock_on_sent =  mocker.patch("links_connect.callbacks.chained.Chainable.on_sent", autospec=True)
+    mock_on_recv =  mocker.patch("links_connect.callbacks.ChainableCallback.on_recv", autospec=True)
+    mock_on_sent =  mocker.patch("links_connect.callbacks.ChainableCallback.on_sent", autospec=True)
 
     mock_on_recv.side_effect = original_on_recv
     mock_on_sent.side_effect = original_on_sent
@@ -21,7 +21,7 @@ def mock_chained(mocker) -> Tuple[Mock, Mock]:
 
 
 def test_logger(mock_chained):
-    from links_connect import LoggerCallback, ConId, Message, ConType
+    from links_connect.callbacks import ConId, Message, ConType, LoggerCallback
     clbk = LoggerCallback(name="LoggerCallbackFirst") + LoggerCallback(name="LoggerCallbackSecond") 
 
     clbk.on_sent(ConId(con_type=ConType.Initiator), {"sent": {}})
