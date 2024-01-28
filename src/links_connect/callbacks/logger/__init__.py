@@ -1,6 +1,5 @@
 import logging
 import links_connect as lc
-# from links_connect import ConId, Message
 from links_connect.callbacks.chained import Chainable
 from typing import Optional
 

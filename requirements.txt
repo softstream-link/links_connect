@@ -1,3 +1,0 @@
-ouch-connect==5.0.1rc2
-pytest
-pytest-mock

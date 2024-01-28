@@ -1,13 +1,7 @@
 {
-    "terminal.integrated.env.osx": {
-        "PYTHONPATH": ".:${env:PYTHONPATH}"
-    },
     "python.analysis.typeCheckingMode": "basic",
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
     "[python]": {
         "editor.detectIndentation": false,
         "editor.insertSpaces": true,
@@ -19,12 +13,14 @@
         "150"
     ],
     "files.exclude": {
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        "**/*.egg-info": true
     },
     "cSpell.words": [
         "clbk",
         "hbeat",
         "levelname",
-        "micromamba"
+        "micromamba",
+        "pytest"
     ],
 }

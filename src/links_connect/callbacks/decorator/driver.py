@@ -35,21 +35,25 @@ class DecoratorDriver(DecoratorDriverBase, SettableSender):
     def __init__(self) -> None:
         super().__init__()
 
-    def on_sent(self, con_id: lc.ConId, msg: lc.Message):
+    def on_sent(self, con_id: lc.ConId, msg: lc.Message) -> None:
         registry = CallbackRegistry.get(self.__class__.__name__).on_sent_filter_callback_entries
         match registry.find(msg):
             case None:
-                log.warning(f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})")
+                log.warning(
+                    f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})"
+                )
             case function:
                 log.debug(f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)
         super().on_sent(con_id, msg)
 
-    def on_recv(self, con_id: lc.ConId, msg: lc.Message):
+    def on_recv(self, con_id: lc.ConId, msg: lc.Message) -> None:
         registry = CallbackRegistry.get(self.__class__.__name__).on_recv_filter_callback_entries
         match registry.find(msg):
             case None:
-                log.warning(f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})")
+                log.warning(
+                    f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})"
+                )
             case function:
                 log.debug(f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)

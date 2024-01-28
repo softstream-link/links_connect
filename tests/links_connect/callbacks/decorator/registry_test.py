@@ -1,4 +1,5 @@
 from links_connect.callbacks.decorator.registry import FilterCallbackEntries, FilterEntry, CallbackRegistry
+import links_connect as ls
 import pytest
 import logging
 
@@ -6,7 +7,7 @@ log = logging.getLogger(__name__)
 
 
 @pytest.mark.parametrize(
-    "filter, data, is_matching",
+    "filter, msg, is_matching",
     [
         ({}, {"one": 1}, True),
         ({"one": 1}, {"one": 1}, True),
@@ -19,13 +20,12 @@ log = logging.getLogger(__name__)
         ({"one": {}}, {"one": []}, False),
     ],
 )
-def test_is_subset(filter, data, is_matching):
+def test_is_subset(filter, msg, is_matching):
     log.info(f"filter: {filter}")
-    log.info(f"data: {data}")
+    log.info(f"msg: {msg}")
     log.info(f"is_matching: {is_matching}")
 
-    entry = FilterEntry(filter, lambda clbk, con_id, msg: None)
-    assert entry.is_matching(data) == is_matching
+    assert ls.is_matching(filter, msg) == is_matching
 
 
 def test_callback_function_filter_entries():
@@ -50,7 +50,7 @@ def test_callback_function_filter_entries():
 def test_callback_registry():
     registry1 = CallbackRegistry.get("one")
     assert registry1 == CallbackRegistry.get("one")
-    
+
     registry2 = CallbackRegistry.get("two")
     assert registry2 == CallbackRegistry.get("two")
 

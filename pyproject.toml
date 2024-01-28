@@ -1,31 +1,26 @@
-# [tool.poetry]
-# name = "neat"
-# version = "0.1.0"
-# description = ""
-# authors = ["Softstream <softstream.link@gmail.com>"]
-# readme = "readme.md"
-# packages = [{ include = "links_core", from = "./src" }]
-
-# [tool.poetry.dependencies]
-# python = "^3.12"
-
-
-# [build-system]
-# requires = ["poetry-core"]
-# build-backend = "poetry.core.masonry.api"
-[tool.flit]
-metadata = "pyproject.toml"
-module = "links_connect"
-
 [build-system]
-requires = ["flit_core >=2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools>=61.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
+[project]
+name = "links_connect"
+dynamic = ["version"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["./tests"]
 cache_dir = "./target/.pytest_cache"
 log_cli = true
 log_cli_level = "DEBUG"
-log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+
+[project.optional-dependencies]
+dev = [
+    # "tox"
+]
+test = ["pytest", "pytest-mock", "ouch-connect==5.0.1rc2"]

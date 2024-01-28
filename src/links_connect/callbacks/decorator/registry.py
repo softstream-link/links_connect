@@ -21,54 +21,40 @@ class FilterEntry:
     filter: lc.Filter
     function: CallbackFunction
 
-    def is_matching(self, data: lc.Message) -> bool:
-        for f_key, f_val in self.filter.items():
-            match data.get(f_key, None):
-                case None:
-                    return True if f_val is None else False
-                case dict() as d_val:
-                    if (not isinstance(f_val, dict)) or (isinstance(f_val, dict) and len(f_val) != 0 and not self.is_matching(d_val)):
-                        return False
-                case _ as d_val:
-                    if f_val != d_val:
-                        return False
-
-        return True
-
 
 class FilterCallbackEntries:
     def __init__(self):
-        self._filter_entries: List[FilterEntry] = []
+        self.__filter_entries: List[FilterEntry] = []
 
     def len(self) -> int:
-        return len(self._filter_entries)
+        return len(self.__filter_entries)
 
     def push(self, subset: lc.Filter, function: CallbackFunction):
         if log.isEnabledFor(logging.DEBUG):
             log.debug(f"{self.__class__.__name__}.push: filter: {subset}, function: {function}")
-        self._filter_entries.append(FilterEntry(subset, function))
+        self.__filter_entries.append(FilterEntry(subset, function))
 
     def find_all(self, message: lc.Message) -> List[CallbackFunction]:
-        return [entry.function for entry in self._filter_entries if entry.is_matching(message)]
+        return [entry.function for entry in self.__filter_entries if lc.is_matching(entry.filter, message)]
 
     def find(self, message: lc.Message) -> Optional[CallbackFunction]:
-        for entry in self._filter_entries:
-            if entry.is_matching(message):
+        for entry in self.__filter_entries:
+            if lc.is_matching(entry.filter, message):
                 return entry.function
         return None
 
     def get(self, subset: lc.Filter) -> Optional[CallbackFunction]:
-        for entry in self._filter_entries:
+        for entry in self.__filter_entries:
             if entry.filter == subset:
                 return entry.function
         return None
 
     @property
     def entries(self) -> Sequence[FilterEntry]:
-        return self._filter_entries
+        return self.__filter_entries
 
     def __iter__(self):
-        return iter(self._filter_entries)
+        return iter(self.__filter_entries)
 
     def __str__(self) -> str:
         return f'filters: #{self.len()} {super().__str__()}\n{"\n".join([str(entry) for entry in self.entries])}'
