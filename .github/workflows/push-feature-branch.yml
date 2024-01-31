@@ -3,11 +3,11 @@ on:
   push:
       branches:
         - '*'
-        - '!master'
+        - '!main'
 
 jobs:
   test-matrix:
-    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@master
+    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@main
     with:
       fail-fast: false
   
