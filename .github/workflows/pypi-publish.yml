@@ -8,7 +8,7 @@ on:
         required: true
 jobs:  
   maturin-publish-test-pypi:
-    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@main
+    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@v1
     with:
       environment: ${{ inputs.environment }} #'test' # needs both environment and secrets to work https://github.com/actions/runner/issues/1490
     secrets:
