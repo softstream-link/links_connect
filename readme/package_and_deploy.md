@@ -8,14 +8,29 @@ micromamba run      --name neat_build_env pip install --extra-index-url https://
 micromamba run      --name neat_build_env tox run
 ```
 
-# Build & Test Wheel on older python
+# Install and Test on older python
 ```shell
 micromamba create --name neat_test_env python=3.11 --yes  &&
-(rm -f ./target/wheels/*.whl || true) &&
 micromamba run --name neat_test_env  pip install ".[test]" &&
 micromamba run --name neat_test_env  pytest
-# micromamba run --name neat_test_env  pip wheel --wheel-dir ./target/wheels . &&
-# micromamba run --name neat_test_env  pip install --ignore-installed ./target/wheels/*.whl &&
+```
+
+# Build and Upload to TestPyPi
+* expects a `~/.pypirc` file with credentials for `testpypi` 
+```shell
+micromamba create   --name neat_upload_testpypi_env python twine --yes &&
+(rm -f ./target/wheels/*.whl || true) &&
+micromamba run --name neat_upload_testpypi_env  pip wheel --wheel-dir ./target/wheels . &&
+micromamba run --name neat_upload_testpypi_env  twine check ./target/wheels/*.whl &&
+micromamba run --name neat_upload_testpypi_env  twine upload --repository testpypi ./target/wheels/*.whl
+```
+
+# Install from TestPyPi
+```shell
+micromamba create   --name neat_install_testpypi_env  python pytest pytest-mock --yes &&
+micromamba run      --name neat_install_testpypi_env  pip install --extra-index-url https://test.pypi.org/simple/ links_connect
+micromamba run      --name neat_install_testpypi_env  pytest
+```
 ```
 
 # Versioning Check

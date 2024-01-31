@@ -23,7 +23,9 @@
         "hbeat",
         "levelname",
         "micromamba",
+        "pypirc",
         "pytest",
-        "setuptools"
+        "setuptools",
+        "testpypi"
     ],
 }

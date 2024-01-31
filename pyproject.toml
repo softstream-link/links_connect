@@ -5,7 +5,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.setuptools_scm] # enables dynamic versioning
+[tool.setuptools_scm]
+local_scheme="no-local-version" # disables local versioning such as adding commit hash etc to enable upload to pypi
 
 [project]
 name = "links_connect"
@@ -37,6 +38,7 @@ test = [
     "pytest",
     "pytest-mock",
     "pytest-sugar",
+    "pytest-cov",
     # , "ouch-connect==5.0.1rc2"
 ]
 
@@ -48,5 +50,6 @@ deps =
     pytest
     pytest-mock
     pytest-sugar
-commands = pytest {tty:--color=yes} {posargs}
+    pytest-cov
+commands = pytest {posargs}
 """
