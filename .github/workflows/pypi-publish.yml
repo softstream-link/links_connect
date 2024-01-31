@@ -1,0 +1,15 @@
+name: PyPi Publish
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+jobs:  
+  maturin-publish-test-pypi:
+    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@main
+    with:
+      environment: ${{ inputs.environment }} #'test' # needs both environment and secrets to work https://github.com/actions/runner/issues/1490
+    secrets:
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }} # needs both environment and secrets to work https://github.com/actions/runner/issues/1490

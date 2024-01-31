@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=64.0", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+local_scheme="no-local-version" # disables local versioning such as adding commit hash etc to enable upload to pypi
+
+[project]
+name = "links_connect"
+authors = [{ name = "Softstream", email = "softstream.link@gmail.com" }]
+description = "a collection of utilities for working links extensions derivatives"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+readme = "readme.md"
+dependencies = []
+dynamic = ["version"]
+
+
+[tool.pytest.ini_options]
+testpaths = ["./tests"]
+cache_dir = "./target/.pytest_cache"
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+
+# installs default dependencies when running pip install ".[test]"
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-mock",
+    "pytest-sugar",
+    "pytest-cov",
+    "tox",
+    # , "ouch-connect==5.0.1rc2"
+]
+
+# installs default dependencies when running tox
+[tool.tox]
+legacy_tox_ini = """
+[testenv]
+deps = 
+    pytest
+    pytest-mock
+    pytest-sugar
+    pytest-cov
+commands = pytest {posargs}
+"""

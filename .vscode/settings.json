@@ -1,0 +1,31 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "[python]": {
+        "editor.detectIndentation": false,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "black-formatter.args": [
+        "--line-length",
+        "150"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true,
+        // "**/*.egg-info": true,
+        // "build": true,
+    },
+    "cSpell.words": [
+        "clbk",
+        "clbks",
+        "hbeat",
+        "levelname",
+        "micromamba",
+        "pypirc",
+        "pytest",
+        "setuptools",
+        "testpypi"
+    ],
+}

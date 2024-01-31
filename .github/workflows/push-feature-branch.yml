@@ -1,0 +1,17 @@
+name: Push Test Build
+on:
+  push:
+      branches:
+        - '*'
+        - '!main'
+
+jobs:
+  test-matrix:
+    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@main
+    with:
+      fail-fast: false
+  
+
+
+
+  
