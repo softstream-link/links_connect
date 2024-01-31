@@ -31,11 +31,22 @@ log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filena
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 
+# installs default dependencies when running pip install ".[test]"
 [project.optional-dependencies]
 test = [
     "pytest",
     "pytest-mock",
     "pytest-sugar",
-    # "tox",
     # , "ouch-connect==5.0.1rc2"
 ]
+
+# installs default dependencies when running tox
+[tool.tox]
+legacy_tox_ini = """
+[testenv]
+deps = 
+    pytest
+    pytest-mock
+    pytest-sugar
+commands = pytest tests
+"""
