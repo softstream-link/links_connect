@@ -40,7 +40,11 @@ def is_matching(filter: Filter, msg: Message) -> bool:
             case None:
                 return True if f_val is None else False
             case dict() as d_val:
-                if (not isinstance(f_val, dict)) or (isinstance(f_val, dict) and len(f_val) != 0 and not is_matching(f_val, d_val)):
+                if (not isinstance(f_val, dict)) or (
+                    isinstance(f_val, dict)
+                    and len(f_val) != 0
+                    and not is_matching(f_val, d_val)
+                ):
                     return False
             case _ as d_val:
                 if f_val != d_val:

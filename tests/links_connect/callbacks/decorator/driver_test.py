@@ -1,4 +1,12 @@
-from links_connect.callbacks import ConId, Message, on_recv, on_sent, DecoratorDriver, CallbackRegistry, LoggerCallback
+from links_connect.callbacks import (
+    ConId,
+    Message,
+    on_recv,
+    on_sent,
+    DecoratorDriver,
+    CallbackRegistry,
+    LoggerCallback,
+)
 import logging
 
 log = logging.getLogger(__name__)
@@ -47,25 +55,54 @@ def test_callback_driver():
 
     log.info(f"clbk: {clbk1}")
     log.info(f"clbk: {clbk2}")
-    assert CallbackRegistry.get(clbk1.__class__.__name__).on_recv_filter_callback_entries.len() == 2
-    assert CallbackRegistry.get(clbk1.__class__.__name__).on_sent_filter_callback_entries.len() == 2
-    assert CallbackRegistry.get(clbk2.__class__.__name__).on_recv_filter_callback_entries.len() == 1
-    assert CallbackRegistry.get(clbk2.__class__.__name__).on_sent_filter_callback_entries.len() == 0
+    assert (
+        CallbackRegistry.get(
+            clbk1.__class__.__name__
+        ).on_recv_filter_callback_entries.len()
+        == 2
+    )
+    assert (
+        CallbackRegistry.get(
+            clbk1.__class__.__name__
+        ).on_sent_filter_callback_entries.len()
+        == 2
+    )
+    assert (
+        CallbackRegistry.get(
+            clbk2.__class__.__name__
+        ).on_recv_filter_callback_entries.len()
+        == 1
+    )
+    assert (
+        CallbackRegistry.get(
+            clbk2.__class__.__name__
+        ).on_sent_filter_callback_entries.len()
+        == 0
+    )
 
     clbk1.on_recv(ConId(), {"one_recv": {}, "two_recv": {}, "three_recv": {}})
     clbk2.on_recv(ConId(), {"one_recv": {}, "two_recv": {}, "three_recv": {}})
     clbk1.on_sent(ConId(), {"one_sent": {}, "two_sent": {}, "three_sent": {}})
-    assert clbk1._one_recv == 1  # called because it is the first @on_recv annotated method
+    assert (
+        clbk1._one_recv == 1
+    )  # called because it is the first @on_recv annotated method
     assert clbk1._two_recv == 0
     assert clbk1._three_recv == 0
-    assert clbk1._one_sent == 1  # called because it is the first @on_recv annotated method
+    assert (
+        clbk1._one_sent == 1
+    )  # called because it is the first @on_recv annotated method
     assert clbk1._two_sent == 0
     assert clbk1._three_sent == 0
-    assert clbk2._one_recv == 1  # called because it is the first @on_recv annotated method
+    assert (
+        clbk2._one_recv == 1
+    )  # called because it is the first @on_recv annotated method
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)8s] (%(threadName)10s) %(message)s (%(filename)s:%(lineno)s)")
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)8s] (%(threadName)10s) %(message)s (%(filename)s:%(lineno)s)",
+    )
     test_callback_driver()
     # import pytest
     # pytest.main([__file__])  # fails because ExampleCallback get loaded twice which causes callbacks to be registered twice

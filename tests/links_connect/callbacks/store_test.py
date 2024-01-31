@@ -10,9 +10,9 @@ def test_store_callback():
 
     log.info(f"io_timeout: {store.io_timeout}")
     assert store.io_timeout == 1.0
-    store.io_timeout = .1
+    store.io_timeout = 0.1
     log.info(f"io_timeout: {store.io_timeout}")
-    assert store.io_timeout == .1
+    assert store.io_timeout == 0.1
     con_id = ConId(ConType.Initiator, "clt")
     msg_inp_1 = {"one": 1, "two": 2, "three": 3}
     msg_inp_2 = {"four": 4, "five": 5, "six": 6}
@@ -29,28 +29,28 @@ def test_store_callback():
     # find by name
     found = store.find(name="clt")
     assert found is not None
-    log.info(f"{'find(name=\'clt\')'.ljust(pad)}found: {found.msg}")
+    log.info("{find} -> {found}".format(find="find(name='clt')".ljust(pad), found=found.msg))
     assert msg_inp_2 == found.msg
 
     # find with filter
     found = store.find(filter={"three": 3})
     assert found is not None
-    log.info(f"{'find(filter={{\'three\': 3}})'.ljust(pad)}found: {found.msg}")
+    log.info("{find} -> {found}".format(find="find(filter={{'three': 3}})".ljust(pad), found=found.msg))
     assert msg_inp_1 == found.msg
 
     # find with filter and name
     found = store.find(filter={"three": 3}, name="clt")
     assert found is not None
-    log.info(f"{'find(filter={{\'three\': 3}}, name=\'clt\')'.ljust(pad)}found: {found.msg}")
+    log.info("{find} -> {found}".format(find="find(filter={{'three': 3}}, name='clt')".ljust(pad), found=found.msg))
     assert msg_inp_1 == found.msg
 
     # not found by name
     found = store.find(name="svc")
-    log.info(f"{'find(name=\'svc\')'.ljust(pad)}found: {found}")
+    log.info("{find} found: {found}".format(find="find(name='svc')".ljust(pad), found=found))
 
     # not found by filter
     found = store.find(filter={"three": 4})
-    log.info(f"{'find(filter={{\'three\': 4}})'.ljust(pad)}found: {found}")
+    log.info("{find} -> {found}".format(find="find(filter={{'three': 4}})".ljust(pad), found=found))
     assert found is None
 
 

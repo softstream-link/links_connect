@@ -1,4 +1,4 @@
-# from links_connect import ConId, Message, DecoratorDriver, on_recv, LoggerCallback
+# from links_connect.callbacks import ConId, Message, DecoratorDriver, on_recv, LoggerCallback
 # from ouch_connect import CltManual, SvcManual
 # import logging
 # from time import sleep
@@ -10,14 +10,14 @@
 
 # class SvcLoginSimulator(DecoratorDriver):
 #     def __init__(self, io_timeout: float = 0.5):
-#         super().__init__(sent_level=logging.DEBUG, recv_level=logging.INFO)
+#         super().__init__()
 #         self._io_timeout = io_timeout
 
-#     @on_recv(filter={"LoginRequest": {}}, registry=DecoratorDriver)
+#     @on_recv(filter={"LoginRequest": {}}, scope="SvcLoginSimulator")
 #     def login_request(self, con_id: ConId, msg: Message):
 #         self.sender.send({"LoginAccepted": {"session_id": "session #1", "sequence_number": "1"}})
 
-#     @on_recv(filter={"HBeat": {}}, registry=DecoratorDriver)
+#     @on_recv(filter={"HBeat": {}}, scope="SvcLoginSimulator")
 #     def hbeat(self, con_id: ConId, msg: Message):
 #         self.sender.send({"HBeat": {}})
 

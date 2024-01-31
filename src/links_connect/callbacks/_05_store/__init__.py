@@ -1,4 +1,10 @@
-from links_connect.callbacks import ConId, Message, Filter, is_matching, ChainableCallback
+from links_connect.callbacks import (
+    ConId,
+    Message,
+    Filter,
+    is_matching,
+    ChainableCallback,
+)
 import dataclasses
 import enum
 import datetime as dt
@@ -35,7 +41,11 @@ class Store(metaclass=abc.ABCMeta):
         ...
 
     def __effective_timeout(self, io_timeout: ty.Optional[float]) -> float:
-        return io_timeout if io_timeout is not None else (self.io_timeout if self.io_timeout is not None else 0)
+        return (
+            io_timeout
+            if io_timeout is not None
+            else (self.io_timeout if self.io_timeout is not None else 0)
+        )
 
     def find(
         self,
@@ -103,12 +113,20 @@ class Store(metaclass=abc.ABCMeta):
                 return result
 
     def find_all_recv(
-        self, name: ty.Optional[str], filter: ty.Optional[Filter] = None, io_timeout: ty.Optional[float] = None, top: ty.Optional[int] = None
+        self,
+        name: ty.Optional[str],
+        filter: ty.Optional[Filter] = None,
+        io_timeout: ty.Optional[float] = None,
+        top: ty.Optional[int] = None,
     ) -> ty.List[Entry]:
         return self.find_all(name, filter, Direction.RECV, io_timeout, top)
 
     def find_all_sent(
-        self, name: ty.Optional[str], filter: ty.Optional[Filter] = None, io_timeout: ty.Optional[float] = None, top: ty.Optional[int] = None
+        self,
+        name: ty.Optional[str],
+        filter: ty.Optional[Filter] = None,
+        io_timeout: ty.Optional[float] = None,
+        top: ty.Optional[int] = None,
     ) -> ty.List[Entry]:
         return self.find_all(name, filter, Direction.SENT, io_timeout, top)
 

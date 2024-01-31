@@ -14,7 +14,8 @@
     ],
     "files.exclude": {
         "**/__pycache__": true,
-        "**/*.egg-info": true
+        // "**/*.egg-info": true,
+        // "build": true,
     },
     "cSpell.words": [
         "clbk",
@@ -22,6 +23,7 @@
         "hbeat",
         "levelname",
         "micromamba",
-        "pytest"
+        "pytest",
+        "setuptools"
     ],
 }

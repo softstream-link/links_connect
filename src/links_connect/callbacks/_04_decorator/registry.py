@@ -55,7 +55,11 @@ class Filter2CallbackEntries:
         return iter(self.__filter_entries)
 
     def __str__(self) -> str:
-        return f'filters: #{self.len()} {super().__str__()}\n{"\n".join([str(entry) for entry in self.entries])}'
+        return "filters: #{len} {name}\n{entries}".format(
+            len=self.len(),
+            name=super().__str__(),
+            entries="\n".join([str(entry) for entry in self.entries]),
+        )
 
 
 from typing import Dict, Self
@@ -96,10 +100,16 @@ class CallbackRegistry:
     def __str__(self) -> str:
         return (
             f"{self.__class__.__name__}({self.__name}):"
-            + f"\non_recv -> len: {self.on_recv_filter_callback_entries.len()}"
-            + f"{'\n' if self.on_recv_filter_callback_entries.len() else ''}{'\n'.join(['\t' + str(e) for e in self.on_recv_filter_callback_entries.entries] )}"
-            + f"\non_sent -> len: {self.on_sent_filter_callback_entries.len()}"
-            + f"{'\n' if self.on_sent_filter_callback_entries.len() else ''}{'\n'.join(['\t' + str(e) for e in self.on_sent_filter_callback_entries.entries])}\n"
+            + "\non_recv -> len: {len}".format(len=self.on_recv_filter_callback_entries.len())
+            + "{nl}{entries}".format(
+                nl="\n" if self.on_recv_filter_callback_entries.len() else "",
+                entries="\n".join(["\t" + str(e) for e in self.on_recv_filter_callback_entries.entries]),
+            )
+            + "\non_sent -> len: {len}".format(len=self.on_sent_filter_callback_entries.len())
+            + "{nl}{entries}\n".format(
+                nl="\n" if self.on_sent_filter_callback_entries.len() else "",
+                entries="\n".join(["\t" + str(e) for e in self.on_sent_filter_callback_entries.entries]),
+            )
         )
 
     def __repr__(self) -> str:
