@@ -48,5 +48,5 @@ deps =
     pytest
     pytest-mock
     pytest-sugar
-commands = pytest tests
+commands = pytest {tty:--color=yes} {posargs}
 """
