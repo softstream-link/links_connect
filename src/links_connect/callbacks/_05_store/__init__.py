@@ -70,7 +70,7 @@ class Store(metaclass=abc.ABCMeta):
 
     def find_recv(
         self,
-        name: ty.Optional[str],
+        name: ty.Optional[str] = None,
         filter: ty.Optional[Filter] = None,
         io_timeout: ty.Optional[float] = None,
     ) -> ty.Optional[Entry]:
@@ -78,7 +78,7 @@ class Store(metaclass=abc.ABCMeta):
 
     def find_sent(
         self,
-        name: ty.Optional[str],
+        name: ty.Optional[str] = None,
         filter: ty.Optional[Filter] = None,
         io_timeout: ty.Optional[float] = None,
     ) -> ty.Optional[Entry]:
@@ -86,7 +86,7 @@ class Store(metaclass=abc.ABCMeta):
 
     def find_all(
         self,
-        name: ty.Optional[str],
+        name: ty.Optional[str] = None,
         filter: ty.Optional[Filter] = None,
         direction: ty.Optional[Direction] = None,
         io_timeout: ty.Optional[float] = None,
@@ -114,7 +114,7 @@ class Store(metaclass=abc.ABCMeta):
 
     def find_all_recv(
         self,
-        name: ty.Optional[str],
+        name: ty.Optional[str] = None,
         filter: ty.Optional[Filter] = None,
         io_timeout: ty.Optional[float] = None,
         top: ty.Optional[int] = None,
@@ -123,7 +123,7 @@ class Store(metaclass=abc.ABCMeta):
 
     def find_all_sent(
         self,
-        name: ty.Optional[str],
+        name: ty.Optional[str] = None,
         filter: ty.Optional[Filter] = None,
         io_timeout: ty.Optional[float] = None,
         top: ty.Optional[int] = None,
