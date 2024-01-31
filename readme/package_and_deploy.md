@@ -17,6 +17,7 @@ micromamba run --name neat_test_env  pytest
 
 # Build and Upload to TestPyPi
 * expects a `~/.pypirc` file with credentials for `testpypi` 
+*  fails if the package is already uploaded, to generate new version add a commit which will increment the version number
 ```shell
 micromamba create   --name neat_upload_testpypi_env python twine --yes &&
 (rm -f ./target/wheels/*.whl || true) &&
@@ -31,7 +32,7 @@ micromamba create   --name neat_install_testpypi_env  python pytest pytest-mock 
 micromamba run      --name neat_install_testpypi_env  pip install --extra-index-url https://test.pypi.org/simple/ links_connect
 micromamba run      --name neat_install_testpypi_env  pytest
 ```
-```
+
 
 # Versioning Check
 ```shell
