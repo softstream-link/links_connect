@@ -39,6 +39,7 @@ test = [
     "pytest-mock",
     "pytest-sugar",
     "pytest-cov",
+    "tox",
     # , "ouch-connect==5.0.1rc2"
 ]
 
