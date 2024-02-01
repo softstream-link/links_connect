@@ -7,6 +7,7 @@ from links_connect.callbacks import (
     CallbackRegistry,
     LoggerCallback,
 )
+from links_connect.callbacks._04_decorator.driver import scope_name
 import logging
 
 log = logging.getLogger(__name__)
@@ -35,19 +36,19 @@ def test_callback_driver():
             self._two_sent = 0
             self._three_sent = 0
 
-        @on_recv(filter={"one_recv": {}}, scope="ExampleCallback1")
+        @on_recv(filter={"one_recv": {}})
         def one_recv(self, con_id: ConId, msg: Message):
             self._one_recv += 1
 
-        @on_recv(filter={"two_recv": {}}, scope="ExampleCallback1")
+        @on_recv(filter={"two_recv": {}})
         def two_recv(self, con_id: ConId, msg: Message):
             self._two_recv += 1
 
-        @on_sent(filter={"one_sent": {}}, scope="ExampleCallback1")
+        @on_sent(filter={"one_sent": {}})
         def one_sent(self, con_id: ConId, msg: Message):
             self._one_sent += 1
 
-        @on_sent(filter={"two_sent": {}}, scope="ExampleCallback1")
+        @on_sent(filter={"two_sent": {}})
         def two_sent(self, con_id: ConId, msg: Message):
             self._two_sent += 1
 
@@ -56,7 +57,7 @@ def test_callback_driver():
             super().__init__()
             self._one_recv = 0
 
-        @on_recv(filter={"one_recv": {}}, scope="ExampleCallback2")
+        @on_recv(filter={"one_recv": {}})
         def one_recv(self, con_id: ConId, msg: Message):
             self._one_recv += 1
 
@@ -65,10 +66,10 @@ def test_callback_driver():
 
     log.info(f"clbk: {clbk1}")
     log.info(f"clbk: {clbk2}")
-    assert CallbackRegistry.get(clbk1.__class__.__name__).on_recv_filter_callback_entries.len() == 2
-    assert CallbackRegistry.get(clbk1.__class__.__name__).on_sent_filter_callback_entries.len() == 2
-    assert CallbackRegistry.get(clbk2.__class__.__name__).on_recv_filter_callback_entries.len() == 1
-    assert CallbackRegistry.get(clbk2.__class__.__name__).on_sent_filter_callback_entries.len() == 0
+    assert CallbackRegistry.get(scope_name(ExampleCallback1.one_recv)).on_recv_filter_callback_entries.len() == 2
+    assert CallbackRegistry.get(scope_name(ExampleCallback1.one_recv)).on_sent_filter_callback_entries.len() == 2
+    assert CallbackRegistry.get(scope_name(ExampleCallback2.one_recv)).on_recv_filter_callback_entries.len() == 1
+    assert CallbackRegistry.get(scope_name(ExampleCallback2.one_recv)).on_sent_filter_callback_entries.len() == 0
 
     clbk1.on_recv(ConId(), {"one_recv": {}, "two_recv": {}, "three_recv": {}})
     clbk2.on_recv(ConId(), {"one_recv": {}, "two_recv": {}, "three_recv": {}})

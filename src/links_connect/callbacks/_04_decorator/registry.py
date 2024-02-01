@@ -28,8 +28,7 @@ class Filter2CallbackEntries:
         return len(self.__filter_entries)
 
     def push(self, subset: clbks.Filter, function: CallbackFunction):
-        if log.isEnabledFor(logging.DEBUG):
-            log.debug(f"{self.__class__.__name__}.push: filter: {subset}, function: {function}")
+        log.debug(f"{self.__class__.__name__}.push: filter: {subset}, function: {function}")
         self.__filter_entries.append(Filter2CallbackEntry(subset, function))
 
     def find_all(self, message: clbks.Message) -> typing.List[CallbackFunction]:

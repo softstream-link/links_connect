@@ -36,34 +36,26 @@ class DecoratorDriver(registry.DecoratorDriverBase, SettableSender):
         super().__init__()
 
     def on_sent(self, con_id: clbks.ConId, msg: clbks.Message) -> None:
-        registry = clbks.CallbackRegistry.get(
-            self.__class__.__name__
-        ).on_sent_filter_callback_entries
+        registry = clbks.CallbackRegistry.get(self.__class__.__qualname__).on_sent_filter_callback_entries
         match registry.find(msg):
             case None:
                 log.warning(
                     f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})"
                 )
             case function:
-                log.debug(
-                    f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} delegating to registered {function}"
-                )
+                log.debug(f"{DecoratorDriver.__name__}.on_sent of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)
         super().on_sent(con_id, msg)
 
     def on_recv(self, con_id: clbks.ConId, msg: clbks.Message) -> None:
-        registry = clbks.CallbackRegistry.get(
-            self.__class__.__name__
-        ).on_recv_filter_callback_entries
+        registry = clbks.CallbackRegistry.get(self.__class__.__qualname__).on_recv_filter_callback_entries
         match registry.find(msg):
             case None:
                 log.warning(
                     f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} no registered delegate function {con_id} {type(msg).__name__}({msg})"
                 )
             case function:
-                log.debug(
-                    f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} delegating to registered {function}"
-                )
+                log.debug(f"{DecoratorDriver.__name__}.on_recv of instance {self.__class__.__name__} delegating to registered {function}")
                 function(self, con_id, msg)
         super().on_recv(con_id, msg)
 
@@ -74,11 +66,15 @@ class DecoratorDriver(registry.DecoratorDriverBase, SettableSender):
 from typing import Callable, Any, Type
 
 
-def on_recv(filter: clbks.Filter, scope: str):
+def scope_name(function: Callable) -> str:
+    return ".".join(function.__qualname__.split(".")[:-1])
+
+
+def on_recv(filter: clbks.Filter):
     def decorator(function: Callable[[Any, clbks.ConId, clbks.Message], None]):
-        filter_callback_entries = clbks.CallbackRegistry.get(
-            scope
-        ).on_recv_filter_callback_entries
+        scope = scope_name(function)
+        log.debug(f"Registering filter: {filter} function: {function} with scope: {scope}")
+        filter_callback_entries = clbks.CallbackRegistry.get(scope).on_recv_filter_callback_entries
         existing_function = filter_callback_entries.get(filter)
         if existing_function is None:
             filter_callback_entries.push(filter, function)
@@ -92,11 +88,11 @@ def on_recv(filter: clbks.Filter, scope: str):
     return decorator
 
 
-def on_sent(filter: clbks.Filter, scope: str):
+def on_sent(filter: clbks.Filter):
     def decorator(function: Callable[[Any, clbks.ConId, clbks.Message], None]):
-        filter_callback_entries = clbks.CallbackRegistry.get(
-            scope
-        ).on_sent_filter_callback_entries
+        scope = scope_name(function)
+        log.debug(f"Registering filter: {filter} function: {function} with scope: {scope}")
+        filter_callback_entries = clbks.CallbackRegistry.get(scope).on_sent_filter_callback_entries
         existing_function = filter_callback_entries.get(filter)
         if existing_function is None:
             filter_callback_entries.push(filter, function)
