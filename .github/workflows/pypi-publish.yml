@@ -12,7 +12,7 @@ jobs:
     with:
       fail-fast: true
   
-  maturin-publish-test-pypi:
+  twine-publish-pypi:
     needs: test-matrix
     uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@v1
     with:
