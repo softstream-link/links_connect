@@ -6,9 +6,15 @@ on:
         description: 'Environment to run tests against'
         type: environment
         required: true
-jobs:  
+jobs:
+  test-matrix:
+    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@v1
+    with:
+      fail-fast: true
+  
   maturin-publish-test-pypi:
-    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@main
+    needs: test-matrix
+    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@v1
     with:
       environment: ${{ inputs.environment }} #'test' # needs both environment and secrets to work https://github.com/actions/runner/issues/1490
     secrets:

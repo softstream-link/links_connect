@@ -17,5 +17,6 @@ from links_connect.callbacks._04_decorator.driver import (
     on_recv,
     on_sent,
     DecoratorDriver,
+    SettableSender,
 )
 from links_connect.callbacks._05_store import MemoryStoreCallback
