@@ -12,52 +12,54 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class ExampleCallback1(DecoratorDriver):
-    def __init__(self):
-        super().__init__()
-        self._one_recv = 0
-        self._two_recv = 0
-        self._three_recv = 0
-        self._one_sent = 0
-        self._two_sent = 0
-        self._three_sent = 0
-
-    @on_recv(filter={"one_recv": {}}, scope="ExampleCallback1")
-    def one_recv(self, con_id: ConId, msg: Message):
-        self._one_recv += 1
-
-    @on_recv(filter={"two_recv": {}}, scope="ExampleCallback1")
-    def two_recv(self, con_id: ConId, msg: Message):
-        self._two_recv += 1
-
-    @on_sent(filter={"one_sent": {}}, scope="ExampleCallback1")
-    def one_sent(self, con_id: ConId, msg: Message):
-        self._one_sent += 1
-
-    @on_sent(filter={"two_sent": {}}, scope="ExampleCallback1")
-    def two_sent(self, con_id: ConId, msg: Message):
-        self._two_sent += 1
-
-
-class ExampleCallback2(DecoratorDriver):
-    def __init__(self):
-        super().__init__()
-        self._one_recv = 0
-
-    @on_recv(filter={"one_recv": {}}, scope="ExampleCallback2")
-    def one_recv(self, con_id: ConId, msg: Message):
-        self._one_recv += 1
-
-
 def test_callback_settable_sender_import():
+    class ExampleCallback1(DecoratorDriver):
+        pass
+
     from links_connect.callbacks import SettableSender
     from links_connect.callbacks._04_decorator.driver import Sender
+
     clbk = ExampleCallback1()
     assert isinstance(clbk, SettableSender)
-    assert isinstance(clbk.sender , Sender)
+    assert isinstance(clbk.sender, Sender)
 
 
 def test_callback_driver():
+    class ExampleCallback1(DecoratorDriver):
+        def __init__(self):
+            super().__init__()
+            self._one_recv = 0
+            self._two_recv = 0
+            self._three_recv = 0
+            self._one_sent = 0
+            self._two_sent = 0
+            self._three_sent = 0
+
+        @on_recv(filter={"one_recv": {}}, scope="ExampleCallback1")
+        def one_recv(self, con_id: ConId, msg: Message):
+            self._one_recv += 1
+
+        @on_recv(filter={"two_recv": {}}, scope="ExampleCallback1")
+        def two_recv(self, con_id: ConId, msg: Message):
+            self._two_recv += 1
+
+        @on_sent(filter={"one_sent": {}}, scope="ExampleCallback1")
+        def one_sent(self, con_id: ConId, msg: Message):
+            self._one_sent += 1
+
+        @on_sent(filter={"two_sent": {}}, scope="ExampleCallback1")
+        def two_sent(self, con_id: ConId, msg: Message):
+            self._two_sent += 1
+
+    class ExampleCallback2(DecoratorDriver):
+        def __init__(self):
+            super().__init__()
+            self._one_recv = 0
+
+        @on_recv(filter={"one_recv": {}}, scope="ExampleCallback2")
+        def one_recv(self, con_id: ConId, msg: Message):
+            self._one_recv += 1
+
     clbk1 = ExampleCallback1() + LoggerCallback()
     clbk2 = ExampleCallback2() + LoggerCallback()
 
@@ -79,15 +81,8 @@ def test_callback_driver():
     assert clbk1._three_sent == 0
     assert clbk2._one_recv == 1  # called because it is the first @on_recv annotated method
 
-def main():
-    test_callback_settable_sender_import()
-    test_callback_driver()
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(levelname)8s] (%(threadName)10s) %(message)s (%(filename)s:%(lineno)s)",
-    )
-    main()
-    # import pytest
-    # pytest.main([__file__])  # fails because ExampleCallback get loaded twice which causes callbacks to be registered twice
+    import pytest
+
+    pytest.main([__file__])
