@@ -2,7 +2,7 @@ from links_connect.runner import RunnerConfig, LinkConfig
 from ouch_connect import SvcAuto, CltManual
 
 
-def get_variables():
+def get_variables() -> dict:
     clt = "clt-ouch"
     svc = "svc-ouch"
     config = RunnerConfig(

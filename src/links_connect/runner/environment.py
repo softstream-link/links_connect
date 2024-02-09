@@ -1,16 +1,16 @@
-from typing import Dict, Callable, Self,  Any, List, Sequence
+from typing import Dict, Callable, Self,  Any, List, Sequence, Concatenate
 from links_connect.callbacks import Message, Callback
 from dataclasses import dataclass
 
 Address = str
 Name = str
 
-Clazz = Callable[[Address, Callback, Dict], Any]
+Constructor = Callable[Concatenate[Address, Callback, ...], Any]
 
 @dataclass
 class LinkConfig:
     name: Name
-    impl: Clazz
+    impl: Constructor
     addr: Address
     settings: Dict
 
@@ -18,7 +18,7 @@ class LinkConfig:
 class Link:
     def __init__(self, config: LinkConfig, callback: Callback):
         self.config = config
-        self.__instance = config.impl(config.addr, callback, config.settings)
+        self.__instance = config.impl(config.addr, callback, **config.settings)
 
     def send(self, message: Message):
         self.__instance.send(message)
@@ -47,10 +47,10 @@ class Runner:
     def __init__(self) -> None:
         self.__links_instances: Dict[Name, Link] = {}
     
-    def get(self, name: Name) -> Link:
+    def get_link(self, name: Name) -> Link:
         link = self.__links_instances.get(name)
         assert link is not None , f"name: '{name}' is not valid. Valid names are: {self.__links_instances.keys()}"
         return link
 
-    def push(self, link: Link):
+    def add_link(self, link: Link):
         self.__links_instances[link.config.name] = link

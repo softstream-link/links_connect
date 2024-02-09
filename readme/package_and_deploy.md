@@ -4,7 +4,7 @@
 # Setup Editable Dev env
 ```shell
 micromamba create   --name links_connect_build_env python --yes &&
-micromamba run      --name links_connect_build_env pip install --editable ".[test]" &&
+micromamba run      --name links_connect_build_env pip install --extra-index-url  https://test.pypi.org/simple/ --editable ".[test]" &&
 micromamba run      --name links_connect_build_env tox run
 ```
 

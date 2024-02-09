@@ -9,7 +9,7 @@ class NativeRunner:
         callback = MemoryStoreCallback()
         for config in runner_config.links_global:
             link = Link(config, callback)
-            self.runner.push(link)
+            self.runner.add_link(link)
 
 
     
