@@ -6,3 +6,9 @@ dist
 .mypy_cache
 .tox
 .coverage
+
+# robot framework
+**/report.html
+**/log.html
+**/interactive_console_output.xml
+**/output.xml

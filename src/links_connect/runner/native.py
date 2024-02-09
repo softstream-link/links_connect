@@ -1,0 +1,15 @@
+from links_connect.runner.environment import RunnerConfig, Link, LinkConfig, Runner
+from links_connect.callbacks import MemoryStoreCallback
+
+
+class NativeRunner:
+    def __init__(self, runner_config: RunnerConfig) -> None:
+        super().__init__()
+        self.runner = Runner()
+        callback = MemoryStoreCallback()
+        for config in runner_config.links_global:
+            link = Link(config, callback)
+            self.runner.push(link)
+
+
+    
