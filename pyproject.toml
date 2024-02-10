@@ -19,7 +19,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 readme = "readme.md"
-dependencies = ["robotframework>=7"]
+dependencies = [
+    "robotframework>=7",
+    "robotbackgroundlogger",]
 dynamic = ["version"]
 
 

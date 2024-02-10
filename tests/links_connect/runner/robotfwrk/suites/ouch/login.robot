@@ -1,19 +1,19 @@
-# *** Settings ***
-# Resource    main.resource
-
 *** Settings ***
 Variables     variables.py
-Library       links_connect.runner.robotfwrk.LinksRobotRunner    ${RUNNER_CONFIG}     AS     link    # robotcode: ignore
+Library       links_connect.runner.robotfwrk.LinksRobotRunner    ${RUNNER_CONFIG}
+
 
 *** Variables ***
-# LOGIN_SDFS       ${{ {"LoginRequest": {"username": "dummy", "password": "dummy", "session_id": "session #1", "sequence_number": "1"}} }}
-# &{login}=    ${{ dict(LoginRequest= dict(username= "dummy", password= "dummy", session_id= "session #1", sequence_number= "1")) }}
-&{details}=    username=dummy    password=dummy    session_id=session #1    sequence_number=1
-&{login}=      LoginRequest=&{details}
+${login_req}=    ${{ dict(LoginRequest= dict(username= "dummy", password= "dummy", session_id= "", sequence_number= "1")) }}
+${login_ack}=    ${{ dict(LoginAccepted= {}) }} 
+${login_rej}=    ${{ dict(LoginRejected= {}) }} 
 
 *** Test Cases ***
 Test Login Handshake
-    Log   ${{"\n"}} 
-    Log    ${login}    console=${True}
-    # Log ${login_request}
-    link.send        ${clt}        ${login}
+    Link ${clt} Send Message ${login_req}
+    Link ${clt} Recv Filter ${login_ack}
+    Link ${clt} Recv Filter ${login_rej}
+    Link All Log State
+    Link ${clt} Log State
+
+ 

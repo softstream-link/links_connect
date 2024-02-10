@@ -1,11 +1,11 @@
-from links_connect.callbacks import MemoryStoreCallback, LoggerCallback, ConId, ConType
+from links_connect.callbacks import MemoryStoreCallback, LoggerCallback, ConId, ConType, Direction
 import logging
 
 log = logging.getLogger(__name__)
 
 
 def test_store_callback():
-    store = MemoryStoreCallback()
+    store = MemoryStoreCallback(io_timeout=1.0)
     chain = LoggerCallback() + store
 
     log.info(f"io_timeout: {store.io_timeout}")
@@ -19,7 +19,7 @@ def test_store_callback():
     chain.on_recv(con_id, msg_inp_1)
     chain.on_recv(con_id, msg_inp_2)
 
-    pad = 45
+    pad = 65
     # find last
     found = store.find()
     assert found is not None
@@ -31,12 +31,17 @@ def test_store_callback():
     assert found is not None
     log.info("{find} -> {found}".format(find="find(name='clt')".ljust(pad), found=found.msg))
     assert msg_inp_2 == found.msg
-
+    
     # find with filter
     found = store.find(filter={"three": 3})
     assert found is not None
     log.info("{find} -> {found}".format(find="find(filter={{'three': 3}})".ljust(pad), found=found.msg))
     assert msg_inp_1 == found.msg
+
+    # find by name with filter and direction
+    found = store.find(name="clt", filter={"three": 3}, direction=Direction.RECV)
+    assert found is not None
+    log.info("{find} -> {found}".format(find="find(name='clt', filter={{'three': 3}}, direction=Direction.RECV)".ljust(pad), found=found.msg))
 
     # find with filter and name
     found = store.find(filter={"three": 3}, name="clt")
