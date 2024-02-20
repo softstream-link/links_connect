@@ -15,9 +15,10 @@ micromamba run      --name links_connect_build_env tox run
 ## Run robot tests
 ```shell
 ROBOT_LOG_DIR=./target/robot; mkdir -p ${ROBOT_LOG_DIR} && 
+export RUST_BACKTRACE=0
 export ROBOT_SYSLOG_FILE=${ROBOT_LOG_DIR}/sys.log &&
 export ROBOT_SYSLOG_LEVEL=INFO &&
-micromamba run      --name links_connect_build_env robot  --debugfile ${ROBOT_LOG_DIR}/debugfile.log ./tests
+micromamba run      --name links_connect_build_env robot  --loglevel DEBUG --debugfile ${ROBOT_LOG_DIR}/debugfile.log ./tests
 ```
 
 # Install and Test on older python

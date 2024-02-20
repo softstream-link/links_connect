@@ -7,7 +7,7 @@ class NativeRunner:
         super().__init__()
         self.runner = Runner()
         callback = MemoryStoreCallback()
-        for config in runner_config.links_global:
+        for config in runner_config.link_configs:
             link = Link(config, callback)
             self.runner.add_link(link)
 

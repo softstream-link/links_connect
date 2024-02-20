@@ -5,14 +5,14 @@ log = logging.getLogger(__name__)
 
 
 def test_store_callback():
-    store = MemoryStoreCallback(io_timeout=1.0)
+    store = MemoryStoreCallback(default_find_timeout=1.0)
     chain = LoggerCallback() + store
 
-    log.info(f"io_timeout: {store.io_timeout}")
-    assert store.io_timeout == 1.0
-    store.io_timeout = 0.1
-    log.info(f"io_timeout: {store.io_timeout}")
-    assert store.io_timeout == 0.1
+    log.info(f"io_timeout: {store.default_find_timeout}")
+    assert store.default_find_timeout == 1.0
+    store.default_find_timeout = 0.1
+    log.info(f"io_timeout: {store.default_find_timeout}")
+    assert store.default_find_timeout == 0.1
     con_id = ConId(ConType.Initiator, "clt")
     msg_inp_1 = {"one": 1, "two": 2, "three": 3}
     msg_inp_2 = {"four": 4, "five": 5, "six": 6}

@@ -25,6 +25,7 @@
         "debugfile",
         "hbeat",
         "levelname",
+        "loglevel",
         "micromamba",
         "pypirc",
         "pytest",
