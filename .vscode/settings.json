@@ -1,5 +1,5 @@
 {
-    // "robotcode.robot.pythonPath": ["./src"],
+    "workbench.editor.revealIfOpen": true,
     "python.analysis.typeCheckingMode": "basic",
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
@@ -21,11 +21,16 @@
     "cSpell.words": [
         "clbk",
         "clbks",
+        "datetimestamp",
+        "debugfile",
         "hbeat",
         "levelname",
+        "loglevel",
         "micromamba",
         "pypirc",
         "pytest",
+        "recved",
+        "robotbackgroundlogger",
         "setuptools",
         "testpypi"
     ],

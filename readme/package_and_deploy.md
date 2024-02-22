@@ -4,8 +4,17 @@
 # Setup Editable Dev env
 ```shell
 micromamba create   --name links_connect_build_env python --yes &&
-micromamba run      --name links_connect_build_env pip install --extra-index-url  https://test.pypi.org/simple/ --editable ".[test]" &&
-micromamba run      --name links_connect_build_env tox run
+micromamba run      --name links_connect_build_env pip install --extra-index-url  https://test.pypi.org/simple/ --editable ".[test]"
+```
+
+## Run robot tests
+```shell
+micromamba run      --name links_connect_build_env pip install ".[robot]" &&
+ROBOT_LOG_DIR=./target/robot; mkdir -p ${ROBOT_LOG_DIR} && 
+export RUST_BACKTRACE=0
+export ROBOT_SYSLOG_FILE=${ROBOT_LOG_DIR}/sys.log &&
+export ROBOT_SYSLOG_LEVEL=INFO &&
+micromamba run      --name links_connect_build_env robot  --loglevel DEBUG --debugfile ${ROBOT_LOG_DIR}/debugfile.log ./tests
 ```
 
 # Install and Test on older python

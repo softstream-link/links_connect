@@ -19,4 +19,4 @@ from links_connect.callbacks._04_decorator.driver import (
     DecoratorDriver,
     SettableSender,
 )
-from links_connect.callbacks._05_store import MemoryStoreCallback
+from links_connect.callbacks._05_store import MemoryStoreCallback, Direction, Entry

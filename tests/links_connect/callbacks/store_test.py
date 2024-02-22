@@ -1,25 +1,30 @@
-from links_connect.callbacks import MemoryStoreCallback, LoggerCallback, ConId, ConType
+from links_connect.callbacks import MemoryStoreCallback, LoggerCallback, ConId, ConType, Direction
 import logging
 
 log = logging.getLogger(__name__)
 
 
 def test_store_callback():
-    store = MemoryStoreCallback()
+    store = MemoryStoreCallback(default_find_timeout=1.0)
     chain = LoggerCallback() + store
 
-    log.info(f"io_timeout: {store.io_timeout}")
-    assert store.io_timeout == 1.0
-    store.io_timeout = 0.1
-    log.info(f"io_timeout: {store.io_timeout}")
-    assert store.io_timeout == 0.1
-    con_id = ConId(ConType.Initiator, "clt")
+    log.info(f"io_timeout: {store.default_find_timeout}")
+    assert store.default_find_timeout == 1.0
+    store.default_find_timeout = 0.1
+    log.info(f"io_timeout: {store.default_find_timeout}")
+    assert store.default_find_timeout == 0.1
+
     msg_inp_1 = {"one": 1, "two": 2, "three": 3}
     msg_inp_2 = {"four": 4, "five": 5, "six": 6}
+    
+    con_id = ConId(ConType.Acceptor, "svc")
+    chain.on_sent(con_id, msg_inp_1)
+
+    con_id = ConId(ConType.Initiator, "clt")
     chain.on_recv(con_id, msg_inp_1)
     chain.on_recv(con_id, msg_inp_2)
 
-    pad = 45
+    pad = 65
     # find last
     found = store.find()
     assert found is not None
@@ -38,6 +43,11 @@ def test_store_callback():
     log.info("{find} -> {found}".format(find="find(filter={{'three': 3}})".ljust(pad), found=found.msg))
     assert msg_inp_1 == found.msg
 
+    # find by name with filter and direction
+    found = store.find(name="clt", filter={"three": 3}, direction=Direction.RECV)
+    assert found is not None
+    log.info("{find} -> {found}".format(find="find(name='clt', filter={{'three': 3}}, direction=Direction.RECV)".ljust(pad), found=found.msg))
+
     # find with filter and name
     found = store.find(filter={"three": 3}, name="clt")
     assert found is not None
@@ -52,6 +62,10 @@ def test_store_callback():
     found = store.find(filter={"three": 4})
     log.info("{find} -> {found}".format(find="find(filter={{'three': 4}})".ljust(pad), found=found))
     assert found is None
+
+    log.info(f"state: {store.state()}")
+    assert len(store) == 3
+    store.clear()
 
 
 if __name__ == "__main__":
