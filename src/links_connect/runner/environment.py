@@ -41,7 +41,7 @@ class RunnerConfig:
             , otherwise it returns only the LinkConfig object with the given name as a sequence of one element.
         """
         if name is not None:
-            assert name in self.__link_configs.keys(), f"name: '{name}' is not valid. Valid names are: {self.__link_configs.keys()}"
+            assert name in self.__link_configs.keys(), f"LinkNameInvalidError: name: '{name}'. Valid names are: {self.__link_configs.keys()}"
             return [self.__link_configs[name]]
         else:
             return list(self.__link_configs.values())
@@ -76,7 +76,7 @@ class Link:
         entry = self.__store_callback.find_recv(name=self.__config.name, filter=filter, find_timeout=io_timeout)
         assert (
             entry is not None
-        ), f"io_timeout: {io_timeout}, filter: {filter}, state: {self.__store_callback.state(name=self.__config.name, direction=Direction.RECV)}"
+        ), f"FailedRecvError: io_timeout: {io_timeout}, filter: {filter}, state: {self.__store_callback.state(name=self.__config.name, direction=Direction.RECV)}"
 
         return entry.msg
 
@@ -96,7 +96,7 @@ class Runner:
         self.__memory_store = MemoryStoreCallback(default_find_timeout=default_recv_timeout)
 
     def start(self, config: LinkConfig):
-        assert config.name not in self.__link_instances.keys(), f"Link '{config.name}' already Started"
+        assert config.name not in self.__link_instances.keys(), f"LinkStateInvalidError: Link '{config.name}' already Started"
         link = Link(config, self.__memory_store)
         self.__link_instances[config.name] = link
         if log.isEnabledFor(logging.INFO):
@@ -109,7 +109,9 @@ class Runner:
             log.info(f"Stopped link: {link}")
 
     def _validate_link_name(self, name: Name) -> None:
-        assert name in self.__link_instances.keys(), f"name: '{name}' is not running or valid. Running link names are: {self.__link_instances.keys()}"
+        assert (
+            name in self.__link_instances.keys()
+        ), f"LinkStateInvalidError: name: '{name}' is not running or valid. Running link names are: {self.__link_instances.keys()}"
 
     def _get_valid_link(self, name: Name) -> Link:
         self._validate_link_name(name)
@@ -139,6 +141,9 @@ class Runner:
 
     def state(self, name: Optional[Name] = None, direction: Optional[Direction] = None) -> str:
         return self.__memory_store.state(name, direction)
+
+    def clear_recved(self, name: Optional[Name] = None):
+        self.__memory_store.clear(name)
 
     def __str__(self) -> str:
         return f"Runner links: #{len(self.__link_instances):,}\n: {'\n'.join([str(link) for link in self.__link_instances.values()])}"

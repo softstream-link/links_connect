@@ -22,7 +22,7 @@ class LinksRobotRunner:
 
         if not BuiltIn().robot_running:
             return
-        assert runner_config is not None, "RunnerConfig is required"
+        assert runner_config is not None, "RunnerConfigError: RunnerConfig is required"
 
         self.__runner_config = runner_config
         self.__runner = Runner(default_recv_timeout=self.__runner_config.default_io_timeout)
@@ -75,6 +75,16 @@ class LinksRobotRunner:
         log.info(f"Sending name: '{name}', io_timeout: {io_timeout}, message: {message}", also_console=self.__runner_config.log_also_console)
         self.__runner.send(name, message, io_timeout)
 
+    @keyword("Link All Clear Recved")
+    def recv_clear_all(self):
+        log.info(f"Clearing All Recv'ed", also_console=self.__runner_config.log_also_console)
+        self.__runner.clear_recved()
+
+    @keyword("Link ${name} Clear Recved")
+    def recv_clear(self, name: str):
+        log.info(f"Clearing name: {name} Recv'ed", also_console=self.__runner_config.log_also_console)
+        self.__runner.clear_recved(name)
+
     @keyword("Link ${name} Recv Filter ${filter} with timeout ${io_timeout}")
     def recv_io_timeout(self, name: str, filter: Filter, io_timeout: Optional[float] = None) -> Message:
         io_timeout = self.effective_timeout(io_timeout)
@@ -102,7 +112,7 @@ class LinksRobotRunner:
 
         assert (
             disconnected_count == 0
-        ), f"{disconnected_count:,} of {len(configs):,} Disconnected. io_timeout: {effective_timeout}\n{'\n'.join(status)}"
+        ), f"LinkDisconnectedError: {disconnected_count:,} of {len(configs):,} Disconnected. io_timeout: {effective_timeout}\n{'\n'.join(status)}"
 
         log.info(
             f"All {len(configs):,} Connected. io_timeout: {effective_timeout}\n{'\n'.join(status)}",
@@ -134,7 +144,9 @@ class LinksRobotRunner:
             status.append(f"Connected name: '{config.name}'" if is_connected else f"Disconnected name: '{config.name}'")
             connected_count += 1 if is_connected else 0
 
-        assert connected_count == 0, f"{connected_count:,} of {len(configs):,} Connected. io_timeout: {effective_timeout}\n{'\n'.join(status)}"
+        assert (
+            connected_count == 0
+        ), f"LinkConnectedError: {connected_count:,} of {len(configs):,} Connected. io_timeout: {effective_timeout}\n{'\n'.join(status)}"
         log.info(
             f"All {len(configs):,} Disconnected. io_timeout: {effective_timeout}\n{'\n'.join(status)}",
             also_console=self.__runner_config.log_also_console,

@@ -29,6 +29,7 @@
         "micromamba",
         "pypirc",
         "pytest",
+        "recved",
         "robotbackgroundlogger",
         "setuptools",
         "testpypi"

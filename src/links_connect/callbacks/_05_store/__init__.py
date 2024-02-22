@@ -12,6 +12,7 @@ import typing as ty
 import time
 import abc
 import time
+import itertools as it
 
 
 class Direction(enum.Enum):
@@ -155,7 +156,7 @@ class MemoryStoreCallback(Store, ChainableCallback):
     @property
     def default_find_timeout(self) -> ty.Optional[float]:
         return self.__default_find_timeout
-    
+
     @default_find_timeout.setter
     def default_find_timeout(self, default_find_timeout: float):
         self.__default_find_timeout
@@ -176,3 +177,10 @@ class MemoryStoreCallback(Store, ChainableCallback):
             direction_fmt = "SENT" if e.direction == Direction.SENT else "RECV"
             buf.write(f"{timestamp_fmt} {direction_fmt} {e.con_id} \t{e.msg} \n")
         return f"{buf.getvalue()}"
+
+    def clear(self, name: ty.Optional[str] = None):
+        if name is None:
+            self.__store.clear()
+        else:
+            # [:] will mutate the list rather then creating a new list object
+            self.__store[:] = it.dropwhile(lambda e: e.con_id.name == name, self.__store)

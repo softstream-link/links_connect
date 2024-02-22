@@ -18,7 +18,7 @@ def get_variables() -> dict:
         ],
         default_io_timeout=io_timeout,
         activate_on_init=False,
-        log_also_console=True,
+        log_also_console=False,
     )
     return {
         "RUNNER_CONFIG": config if BuiltIn().robot_running else "ROBOT NOT RUNNING",

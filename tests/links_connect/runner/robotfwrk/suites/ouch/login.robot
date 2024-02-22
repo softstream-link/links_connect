@@ -16,22 +16,16 @@ Test Successfull Login
 
     Link ${clt} Send Message &{{ dict(LoginRequest= dict(username= "dummy", password= "dummy", session_id= "", sequence_number= "1")) }}
     Link ${clt} Recv Filter ${login_ack}
+    Run Keyword And Expect Error    FailedRecvError:*    Link ${clt} Recv Filter ${login_rej}
     
 
-Failed Login
+Test Failed Login
     Link ${clt} Should be Connected
     Link ${svc} Should Not be Connected
     
     Link ${clt} Send Message &{{ dict(LoginRequest= dict(username= "wrong", password= "dummy", session_id= "", sequence_number= "1")) }}
     Link ${clt} Recv Filter ${login_rej}
-    # Run Keyword And Expect Error    FailedRecvError:*    Link ${clt} Recv Filter ${login_rej}
-
-# Other Features
-#     Link ${clt} Log State
-#     Link ${svc} Log State
-#     Link $ Should be Connected
-#     # Link ${clt} Should be Connected
-#     Link ${svc} Should be Connected
+    Run Keyword And Expect Error    FailedRecvError:*    Link ${clt} Recv Filter ${login_ack}
 
 *** Keywords ***
 Do Test Setup
@@ -40,3 +34,4 @@ Do Test Setup
 Do Test Teardown
     Link All Stop
     Link All Log State
+    Link All Clear Recved
