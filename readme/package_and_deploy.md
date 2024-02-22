@@ -7,14 +7,9 @@ micromamba create   --name links_connect_build_env python --yes &&
 micromamba run      --name links_connect_build_env pip install --extra-index-url  https://test.pypi.org/simple/ --editable ".[test]"
 ```
 
-## Run python tests
-```shell
-micromamba run      --name links_connect_build_env pip tox &&
-micromamba run      --name links_connect_build_env tox run
-```
-
 ## Run robot tests
 ```shell
+micromamba run      --name links_connect_build_env pip install ".[robot]" &&
 ROBOT_LOG_DIR=./target/robot; mkdir -p ${ROBOT_LOG_DIR} && 
 export RUST_BACKTRACE=0
 export ROBOT_SYSLOG_FILE=${ROBOT_LOG_DIR}/sys.log &&
