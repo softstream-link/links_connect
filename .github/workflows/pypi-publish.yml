@@ -8,9 +8,9 @@ on:
         required: true
 jobs:
   test-matrix:
-    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@v1
+    uses: softstream-link/workflows/.github/workflows/setuptools-pytest-matrix-py3.yml@v1
     with:
-      fail-fast: true
+      fail-fast: false
   
   twine-publish-pypi:
     needs: test-matrix
