@@ -14,7 +14,7 @@ jobs:
   
   twine-publish-pypi:
     needs: test-matrix
-    uses: softstream-link/workflows/.github/workflows/python-twine-pypi-publish.yml@v1
+    uses: softstream-link/workflows/.github/workflows/setuptools-twine-pypi-publish.yml@v1
     with:
       environment: ${{ inputs.environment }} #'test' # needs both environment and secrets to work https://github.com/actions/runner/issues/1490
     secrets:
