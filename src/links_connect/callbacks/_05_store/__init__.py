@@ -159,10 +159,13 @@ class MemoryStoreCallback(Store, ChainableCallback):
 
     @default_find_timeout.setter
     def default_find_timeout(self, default_find_timeout: float):
-        self.__default_find_timeout
+        self.__default_find_timeout = default_find_timeout
 
     def __str__(self) -> str:
         return self.state(None)
+
+    def __len__(self) -> int:
+        return len(self.__store)
 
     def state(self, name: ty.Optional[str] = None, direction: ty.Optional[Direction] = None) -> str:
         from io import StringIO

@@ -13,9 +13,14 @@ def test_store_callback():
     store.default_find_timeout = 0.1
     log.info(f"io_timeout: {store.default_find_timeout}")
     assert store.default_find_timeout == 0.1
-    con_id = ConId(ConType.Initiator, "clt")
+
     msg_inp_1 = {"one": 1, "two": 2, "three": 3}
     msg_inp_2 = {"four": 4, "five": 5, "six": 6}
+    
+    con_id = ConId(ConType.Acceptor, "svc")
+    chain.on_sent(con_id, msg_inp_1)
+
+    con_id = ConId(ConType.Initiator, "clt")
     chain.on_recv(con_id, msg_inp_1)
     chain.on_recv(con_id, msg_inp_2)
 
@@ -31,7 +36,7 @@ def test_store_callback():
     assert found is not None
     log.info("{find} -> {found}".format(find="find(name='clt')".ljust(pad), found=found.msg))
     assert msg_inp_2 == found.msg
-    
+
     # find with filter
     found = store.find(filter={"three": 3})
     assert found is not None
@@ -57,6 +62,10 @@ def test_store_callback():
     found = store.find(filter={"three": 4})
     log.info("{find} -> {found}".format(find="find(filter={{'three': 4}})".ljust(pad), found=found))
     assert found is None
+
+    log.info(f"state: {store.state()}")
+    assert len(store) == 3
+    store.clear()
 
 
 if __name__ == "__main__":

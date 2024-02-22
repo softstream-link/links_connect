@@ -9,6 +9,7 @@ micromamba run      --name links_connect_build_env pip install --extra-index-url
 
 ## Run python tests
 ```shell
+micromamba run      --name links_connect_build_env pip tox &&
 micromamba run      --name links_connect_build_env tox run
 ```
 

@@ -7,9 +7,16 @@ on:
 
 jobs:
   test-matrix:
-    uses: softstream-link/workflows/.github/workflows/python-tox-matrix-py3.yml@v1
+    uses: softstream-link/workflows/.github/workflows/setuptools-pytest-matrix-py3.yml@v1
     with:
       fail-fast: false
+    
+  publish-pypi-test:
+    needs: test-matrix
+    uses: softstream-link/workflows/.github/workflows/setuptools-twine-pypi-publish.yml@v1
+    with:
+      environment: test
+  
   
 
 

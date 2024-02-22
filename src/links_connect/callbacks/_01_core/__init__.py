@@ -8,6 +8,12 @@ class ConType(enum.Enum):
     Initiator = enum.auto()
     Acceptor = enum.auto()
 
+    def __str__(self) -> str:
+        if self == ConType.Initiator:
+            return "Initiator"
+        else:
+            return "Acceptor"
+
 
 @dataclasses.dataclass
 class ConId:
@@ -15,6 +21,10 @@ class ConId:
     name: str = "unknown"
     local: str = "unknown"
     peer: str = "unknown"
+
+    def __str__(self) -> str:
+        # Initiator(clt-ouch@127.0.0.1:53036->127.0.0.1:8080)
+        return f"{self.con_type}({self.name}@{self.local}->{self.peer})"
 
 
 Message = typing.Dict
