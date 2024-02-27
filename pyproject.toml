@@ -24,9 +24,8 @@ dynamic = ["version"]
 
 # installs default dependencies when running pip install ".[test]"
 [project.optional-dependencies]
-test = ["pytest", "pytest-mock", "pytest-sugar", "pytest-cov"]
+test = ["pytest", "pytest-mock", "pytest-sugar", "pytest-cov", "ouch-connect>=5.0,<5.1", "robotframework>=7"]
 robot = ["robotframework>=7", "robotbackgroundlogger"]
-# "ouch-connect>=5.0.1rc3",
 
 
 [tool.pytest.ini_options]

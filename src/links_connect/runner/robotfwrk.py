@@ -75,15 +75,15 @@ class LinksRobotRunner:
         log.info(f"Sending name: '{name}', io_timeout: {io_timeout}, message: {message}", also_console=self.__runner_config.log_also_console)
         self.__runner.send(name, message, io_timeout)
 
-    @keyword("Link All Clear Recved")
+    @keyword("Link All Clear Store")
     def recv_clear_all(self):
-        log.info(f"Clearing All Recv'ed", also_console=self.__runner_config.log_also_console)
-        self.__runner.clear_recved()
+        log.info(f"Clearing All Store", also_console=self.__runner_config.log_also_console)
+        self.__runner.clear_store()
 
-    @keyword("Link ${name} Clear Recved")
-    def recv_clear(self, name: str):
-        log.info(f"Clearing name: {name} Recv'ed", also_console=self.__runner_config.log_also_console)
-        self.__runner.clear_recved(name)
+    @keyword("Link ${name} Clear Store")
+    def recv_clear_name(self, name: str):
+        log.info(f"Clearing name: {name} Store", also_console=self.__runner_config.log_also_console)
+        self.__runner.clear_store(name)
 
     @keyword("Link ${name} Recv Filter ${filter} with timeout ${io_timeout}")
     def recv_io_timeout(self, name: str, filter: Filter, io_timeout: Optional[float] = None) -> Message:

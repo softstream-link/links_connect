@@ -16,7 +16,7 @@ class LinkConfig:
     name: Name
     impl: Constructor
     addr: Address
-    settings: Dict
+    settings: Dict[str, Any]
 
 
 class RunnerConfig:
@@ -142,7 +142,7 @@ class Runner:
     def state(self, name: Optional[Name] = None, direction: Optional[Direction] = None) -> str:
         return self.__memory_store.state(name, direction)
 
-    def clear_recved(self, name: Optional[Name] = None):
+    def clear_store(self, name: Optional[Name] = None):
         self.__memory_store.clear(name)
 
     def __str__(self) -> str:

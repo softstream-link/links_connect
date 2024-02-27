@@ -1,6 +1,6 @@
 *** Settings ***
 Variables         variables.py
-Library           links_connect.runner.robotfwrk.LinksRobotRunner    ${RUNNER_CONFIG}
+Library           links_connect.runner.LinksRobotRunner    ${RUNNER_CONFIG}
 
 Test Setup        Do Test Setup
 Test Teardown     Do Test Teardown
@@ -18,6 +18,7 @@ Test Successfull Login
     Link ${clt} Recv Filter ${login_ack}
     Run Keyword And Expect Error    FailedRecvError:*    Link ${clt} Recv Filter ${login_rej}
     
+    Link All Should be Connected
 
 Test Failed Login
     Link ${clt} Should be Connected
@@ -27,6 +28,8 @@ Test Failed Login
     Link ${clt} Recv Filter ${login_rej}
     Run Keyword And Expect Error    FailedRecvError:*    Link ${clt} Recv Filter ${login_ack}
 
+    Run Keyword And Expect Error    LinkDisconnectedError:*    Link All Should be Connected
+
 *** Keywords ***
 Do Test Setup
     Link All Start
@@ -34,4 +37,4 @@ Do Test Setup
 Do Test Teardown
     Link All Stop
     Link All Log State
-    Link All Clear Recved
+    Link All Clear Store
